@@ -1,0 +1,59 @@
+#-----prepare the package----
+install.packages('readr')
+library(readr)
+#---download dataset----
+rfj <- read.csv("assignment data/rfj.csv")
+
+#---data type change----
+rfj$WEEK<- as.numeric(rfj$WEEK)
+rfj$q1 <- as.numeric(rfj$q1)
+rfj$q2 <- as.numeric(rfj$q2)
+rfj$q3 <- as.numeric(rfj$q3)
+rfj$p1 <- as.numeric(rfj$p1)
+rfj$p2 <- as.numeric(rfj$p2)
+rfj$p3 <- as.numeric(rfj$p3)
+#-------divided dataset into three parts coping with companies
+#Company 1
+Tropicana <- rfj[,c('WEEK','q1','p1')]
+colnames(Tropicana)<- c('WEEK','Qt','Pt')
+
+#Company 2
+Min_Maid <- rfj[,c('WEEK','q2','p2')]
+colnames(Min_Maid)<- c('WEEK','Qt','Pt')
+
+#Company 3
+Pri_Lb<- rfj[,c('WEEK','q3','p3')]
+colnames(Pri_Lb)<- c('WEEK','Qt','Pt')
+
+#calculate regression by using lm()
+rg_T <- lm(Qt ~ Pt, data = Tropicana)
+print(summary(rg_T)) 
+
+rg_M <- lm(Qt ~ Pt, data = Min_Maid)
+print(summary(rg_M)) 
+
+rg_P <- lm(Qt ~ Pt, data = Pri_Lb)
+print(summary(rg_P)) 
+
+#---calculate avg P & Q---
+#Price
+T_Prc<- mean(Tropicana$Pt, na.rm = TRUE)
+M_Prc<- mean(Min_Maid$Pt, na.rm = TRUE)
+P_Prc<- mean(Pri_Lb$Pt, na.rm = TRUE)
+#Quantity
+T_Qnt<- mean(Tropicana$Qt, na.rm = TRUE)
+M_Qnt<- mean(Min_Maid$Qt, na.rm = TRUE)
+P_Qnt<- mean(Pri_Lb$Qt, na.rm = TRUE)
+
+#---calculate eslatics
+# E = slope coefficient from the regression result*avgP/avgQ
+T_E <- rg_T$coefficients[2]*T_Prc/T_Qnt
+M_E <- rg_M$coefficients[2]*M_Prc/M_Qnt
+P_E <- rg_P$coefficients[2]*P_Prc/P_Qnt
+Elastic_total <- data.frame(
+  'T_E' = T_E,
+  'M_W' = M_E,
+  'P_E' = P_E
+)
+show(Elastic_total)
+
