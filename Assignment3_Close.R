@@ -12,10 +12,12 @@ library(readr)
 # Step 2: Import and Process Cisco Data
 # -----------------read date from Cisco-------------------------
 
-csc_month <- read.csv("assignment data/CSCO-Monthly.csv")
+data_url1 <- "https://raw.githubusercontent.com/ztYasmine/R_statistic_assignment_code/main/assignment%20data/CSCO-Monthly.csv"
+data_url2 <-"https://raw.githubusercontent.com/ztYasmine/R_statistic_assignment_code/main/assignment%20data/Monthly_RFM.csv"
+csc <- read.csv(data_url1)
+mkt_data <- read.csv(data_url2)
 
 #modify the file name and prepare to codify the data
-csc <- csc_month
 sapply(csc,typeof)
 
 #replement: 'OPEN': the price of a day when openning stock market
@@ -35,7 +37,6 @@ csc_cal <- csc[,c('Date','Close','return')]
 # Step 3: Import and Process Market Data
 # ---------------------------------------------
 # Load market data from an Excel file
-mkt_data <- read.csv("assignment data/Monthly_RFM.csv")
 colnames(mkt_data)<-c('Date','Mkt_rf',"RF")
 # Process the market data to convert relevant columns to appropriate formats and units
 mkt_data <- mkt_data %>% mutate(
@@ -49,7 +50,7 @@ mkt_data$Date <- paste(substr(mkt_data$Date,1,4), substr(mkt_data$Date,5,6), sep
 # --------------------------------
 # Step 4: Merge Data Sets
 # --------------------------------
-# Merge the Walmart and market data sets by the 'Date' column
+# Merge the Cisco and market data sets by the 'Date' column
 df = merge(csc_cal, mkt_data, by = "Date")
 
 # Calculate the Cisco excess return 
@@ -67,8 +68,9 @@ print(summary(ols))
 # ------------------------------
 # Step 6: Additional Analysis
 # ------------------------------
-# Calculate the mean return of Walmart over the specified date range
+# Calculate the mean return of Cisco over the specified date range
 mean(df$return, na.rm = TRUE)
+
 
 
 
