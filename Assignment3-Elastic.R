@@ -1,8 +1,12 @@
 #-----prepare the package----
 install.packages('readr')
 library(readr)
+library(jsonlite)
+
+
 #---download dataset----
-rfj <- read.csv("assignment data/rfj.csv")
+data_url <- "https://raw.githubusercontent.com/ztYasmine/R_statistic_assignment_code/main/assignment%20data/rfj.csv"
+rfj <- read.csv(data_url)
 
 #---data type change----
 rfj$WEEK<- as.numeric(rfj$WEEK)
